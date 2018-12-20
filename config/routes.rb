@@ -5,4 +5,9 @@ Rails.application.routes.draw do
 
     post "/sessions" => "sessions#create"
   end
+
+  mount ActionCable.server => '/cable'
+
+  resources :chatrooms, param: :slug
+  resources :messages
 end
