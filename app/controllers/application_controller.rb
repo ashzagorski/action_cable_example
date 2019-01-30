@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
+  before_action :authenticate_user
+  helper_method :current_user, :logged_in?
 
   def current_user
     auth_headers = request.headers['Authorization']
@@ -19,7 +21,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  helper_method :current_user
+  def logged_in?
+    !!current_user
+  end
+
 
   def authenticate_user
     unless current_user

@@ -1,7 +1,45 @@
 class Api::ChatroomsController < ApplicationController
 
-   def show
-    @chatroom = Chatroom.find_by(slug: params[:slug])
+  def index
+    @chatroom = Chatroom.new
+    @chatrooms = Chatroom.all
+  end
+
+  def new
+    if request.referrer.split("/").last == "chatrooms"
+      flast[:notice] = nil
+    end
+    @chatroom = Chatroom.new
+  end
+
+  def edit
+    @chatroom = Chatroom.find_by(params[:id])
+  end
+
+  def create
+    @chatroom = Chatroom.new(chatroom_params)
+    if @chatroom.save 
+      respond_to do |format|
+        format.html { redirect_to @chatroom }
+        format.js
+      end
+    end
+  end
+
+  def update 
+    chatroom = Chatroom.find_by(params[:id])
+    chatroom.update(chatroom_params)
+    redirect_to chatroom
+  end
+
+  def show
+    @chatroom = Chatroom.find_by(params[:id])
     @message = Message.new
+  end
+
+  private
+
+  def chatroom_params
+    params.require(:chatroom).permit(:topic)
   end
 end
